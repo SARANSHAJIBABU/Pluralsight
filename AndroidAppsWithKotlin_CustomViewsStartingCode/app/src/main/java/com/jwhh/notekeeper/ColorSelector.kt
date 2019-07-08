@@ -20,7 +20,19 @@ class ColorSelector @JvmOverloads
 
     private val listOfColors = listOf(Color.RED, Color.BLUE, Color.GREEN)
     private var selectedIndex = 0
-    private var mListener: ColorSelectedListener? = null
+    private var listener: ((Int) -> Unit)? = null
+
+    var selectedColor = Color.TRANSPARENT
+    set(value) {
+        val index = listOfColors.indexOf(value)
+        if(index==-1){
+            colo_selector_checkbox.isChecked = false
+        }else{
+            colo_selector_checkbox.isChecked = true
+            selectedIndex = index
+            color_selector_display.setBackgroundColor(value)
+        }
+    }
 
     init {
         orientation = LinearLayout.HORIZONTAL
@@ -60,26 +72,13 @@ class ColorSelector @JvmOverloads
         color_selector_display.setBackgroundColor(listOfColors[selectedIndex])
     }
 
-    interface ColorSelectedListener{
-        fun onColorSected(color:Int)
-    }
-
-    fun setSelectedColor(color:Int){
-        val index = listOfColors.indexOf(color)
-        if(index==-1){
-            colo_selector_checkbox.isChecked = false
-        }else{
-            colo_selector_checkbox.isChecked = true
-            selectedIndex = index
-            color_selector_display.setBackgroundColor(color)
-        }
-    }
-
-    fun setColorSelectedListener(listener: ColorSelectedListener){
-        mListener = listener
+    fun setListener(function: (Int)->Unit){
+        listener = function
     }
 
     fun broadCastColor(){
-        mListener?.onColorSected(listOfColors[selectedIndex])
+        listener?.let {
+            it(listOfColors[selectedIndex])
+        }
     }
 }

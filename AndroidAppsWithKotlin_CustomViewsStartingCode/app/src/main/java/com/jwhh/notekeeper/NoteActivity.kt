@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.content_main.view.*
 
 class NoteActivity : AppCompatActivity() {
     private var notePosition = POSITION_NOT_SET
@@ -39,12 +40,9 @@ class NoteActivity : AppCompatActivity() {
             notePosition = DataManager.notes.lastIndex
         }
 
-        color_selector.setColorSelectedListener(object: ColorSelector.ColorSelectedListener{
-            override fun onColorSected(color: Int) {
-                mSelectedColor = color
-                DataManager.notes[notePosition].color = mSelectedColor
-            }
-        })
+        color_selector.setListener { color ->
+            mSelectedColor = color
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -57,7 +55,7 @@ class NoteActivity : AppCompatActivity() {
         textNoteTitle.setText(note.title)
         textNoteText.setText(note.text)
         mSelectedColor = note.color
-        color_selector.setSelectedColor(mSelectedColor)
+        color_selector.selectedColor = mSelectedColor
 
         val coursePosition = DataManager.courses.values.indexOf(note.course)
         spinnerCourses.setSelection(coursePosition)
