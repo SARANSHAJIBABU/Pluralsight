@@ -20,7 +20,7 @@ class ColorSelector @JvmOverloads
 
     private val listOfColors = listOf(Color.RED, Color.BLUE, Color.GREEN)
     private var selectedIndex = 0
-    private var listener: ((Int) -> Unit)? = null
+    private var listeners: ArrayList<(Int)->Unit> = ArrayList()
 
     var selectedColor = Color.TRANSPARENT
     set(value) {
@@ -72,12 +72,12 @@ class ColorSelector @JvmOverloads
         color_selector_display.setBackgroundColor(listOfColors[selectedIndex])
     }
 
-    fun setListener(function: (Int)->Unit){
-        listener = function
+    fun addListener(function:(Int)->Unit){
+        listeners.add(function)
     }
 
     fun broadCastColor(){
-        listener?.let {
+        listeners.forEach {
             it(listOfColors[selectedIndex])
         }
     }

@@ -40,7 +40,7 @@ class NoteActivity : AppCompatActivity() {
             notePosition = DataManager.notes.lastIndex
         }
 
-        color_selector.setListener { color ->
+        color_selector.addListener { color ->
             mSelectedColor = color
         }
     }
