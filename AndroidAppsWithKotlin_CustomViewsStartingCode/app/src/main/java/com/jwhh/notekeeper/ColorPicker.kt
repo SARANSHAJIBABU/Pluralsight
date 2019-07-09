@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.widget.SeekBar
@@ -18,7 +19,7 @@ class ColorPicker @JvmOverloads constructor(
         defStyleRes:Int = 0
 ): SeekBar(context, attrs, defStyleAttr, defStyleRes) {
 
-    private var colorsList = listOf(Color.RED,Color.GREEN,Color.BLUE)
+    private var colorsList = mutableListOf(Color.RED,Color.GREEN,Color.BLUE)
 
     init {
 
@@ -28,17 +29,19 @@ class ColorPicker @JvmOverloads constructor(
             colorsList = typedArray.getTextArray(R.styleable.ColorPicker_colors)
                     .map {
                         Color.parseColor(it.toString())
-                    }
+                    } as MutableList<Int>
         }finally {
             typedArray.recycle()
         }
+
+        colorsList.add(0,Color.TRANSPARENT)
         max = colorsList.size-1
         splitTrack = false
         progressBackgroundTintList = ContextCompat.getColorStateList(context,android.R.color.transparent)
         progressTintList = ContextCompat.getColorStateList(context,android.R.color.transparent)
         thumb = context.getDrawable(R.drawable.ic_arrow_drop_down_black_24dp)
         setPadding(paddingLeft,paddingTop,paddingRight,paddingBottom+40)
-        //setBackgroundColor(resources.getColor(android.R.color.black))
+   //     setBackgroundColor(resources.getColor(android.R.color.black))
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -47,24 +50,36 @@ class ColorPicker @JvmOverloads constructor(
     }
 
     fun drawTicks(canvas:Canvas?){
-        canvas?.let {
-            val w = 48
-            val h = 48
-            val halfWidth = if(w==0)1f else w/2f
-            val halfHeight = if(h==0)1f else h/2f
-            val spacing = (width - paddingLeft - paddingRight)/(colorsList.size-1).toFloat()
+        if(colorsList.size>0){
+            canvas?.let {
+                val w = 48
+                val h = 48
+                val halfWidth = if(w==0)1f else w/2f
+                val halfHeight = if(h==0)1f else h/2f
+                val spacing = (width - paddingLeft - paddingRight)/(colorsList.size-1).toFloat()
 
-            val saveCount = canvas.save()
+                val saveCount = canvas.save()
 
-            canvas.translate(paddingLeft.toFloat(),(height/2).toFloat() + 40f)
+                canvas.translate(paddingLeft.toFloat(),(height/2).toFloat() + 40f)
 
-            for(i in 0 until colorsList.size){
-                val paint = Paint()
-                paint.color = colorsList[i]
-                canvas.drawRect(-halfWidth,-halfHeight,halfWidth,halfHeight,paint)
-                canvas.translate(spacing,0f)
+                for(i in 0 until colorsList.size){
+                    if(i==0){
+                        val d:Drawable?= context.getDrawable(R.drawable.ic_clear_black)
+                        val h2 = d?.intrinsicHeight ?: 0
+                        val w2 = d?.intrinsicWidth ?: 0
+                        val hh2 = if(h2>=0) h2/2 else 1
+                        val hw2 = if(w2>=0) w2/2 else 1
+                        d?.setBounds(-hw2,-hh2,hw2,hh2)
+                        d?.draw(canvas)
+                    }else{
+                        val paint = Paint()
+                        paint.color = colorsList[i]
+                        canvas.drawRect(-halfWidth,-halfHeight,halfWidth,halfHeight,paint)
+                    }
+                    canvas.translate(spacing,0f)
+                }
+                canvas.restoreToCount(saveCount)
             }
-            canvas.restoreToCount(saveCount)
         }
     }
 }
