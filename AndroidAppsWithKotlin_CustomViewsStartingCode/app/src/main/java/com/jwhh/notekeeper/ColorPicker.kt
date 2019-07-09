@@ -21,6 +21,17 @@ class ColorPicker @JvmOverloads constructor(
     private var colorsList = listOf(Color.RED,Color.GREEN,Color.BLUE)
 
     init {
+
+        val typedArray = context.obtainStyledAttributes(attrs,R.styleable.ColorPicker)
+
+        try{
+            colorsList = typedArray.getTextArray(R.styleable.ColorPicker_colors)
+                    .map {
+                        Color.parseColor(it.toString())
+                    }
+        }finally {
+            typedArray.recycle()
+        }
         max = colorsList.size-1
         splitTrack = false
         progressBackgroundTintList = ContextCompat.getColorStateList(context,android.R.color.transparent)
