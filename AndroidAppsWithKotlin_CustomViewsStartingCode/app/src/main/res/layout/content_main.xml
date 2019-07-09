@@ -50,5 +50,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="@+id/spinnerCourses"
-        app:layout_constraintTop_toBottomOf="@+id/textNoteText" />
+        app:layout_constraintTop_toBottomOf="@+id/textNoteText"
+        app:colors="@array/colors"/>
 </android.support.constraint.ConstraintLayout>
