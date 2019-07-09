@@ -44,12 +44,14 @@
         app:layout_constraintStart_toStartOf="@+id/spinnerCourses"
         app:layout_constraintTop_toBottomOf="@+id/spinnerCourses" />
 
-    <com.jwhh.notekeeper.ColorSelector
-        android:id="@+id/color_selector"
-        android:layout_width="wrap_content"
+    <com.jwhh.notekeeper.ColorPicker
+        android:id="@+id/colorPicker"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="@+id/spinnerCourses"
-        app:layout_constraintTop_toBottomOf="@+id/textNoteText"
-        app:colors="@array/colors"/>
+        android:layout_marginTop="24dp"
+        android:tickMark="@drawable/ic_menu_camera"
+        android:tickMarkTint="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="@+id/textNoteText"
+        app:layout_constraintStart_toStartOf="@+id/textNoteText"
+        app:layout_constraintTop_toBottomOf="@+id/textNoteText" />
 </android.support.constraint.ConstraintLayout>
