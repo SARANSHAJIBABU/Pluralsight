@@ -42,6 +42,21 @@ class ColorPicker @JvmOverloads constructor(
         thumb = context.getDrawable(R.drawable.ic_arrow_drop_down_black_24dp)
         setPadding(paddingLeft,paddingTop,paddingRight,paddingBottom+40)
    //     setBackgroundColor(resources.getColor(android.R.color.black))
+
+        setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                listeners.forEach{
+                    it(colorsList[progress])
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+        })
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -81,5 +96,20 @@ class ColorPicker @JvmOverloads constructor(
                 canvas.restoreToCount(saveCount)
             }
         }
+    }
+
+    private var listeners: ArrayList<(Int)->Unit> = ArrayList()
+
+    var selectedColor = Color.TRANSPARENT
+            set(value){
+                if(colorsList.indexOf(value)==-1){
+                    progress = 0
+                }else{
+                    progress = colorsList.indexOf(value)
+                }
+            }
+
+    fun addListener(func:(Int)->Unit){
+        listeners.add(func)
     }
 }
