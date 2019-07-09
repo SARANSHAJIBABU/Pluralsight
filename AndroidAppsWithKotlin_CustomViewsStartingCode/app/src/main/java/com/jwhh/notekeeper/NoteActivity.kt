@@ -40,9 +40,9 @@ class NoteActivity : AppCompatActivity() {
             notePosition = DataManager.notes.lastIndex
         }
 
-//        color_selector.addListener { color ->
-//            mSelectedColor = color
-//        }
+        colorPicker.addListener { color ->
+            mSelectedColor = color
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -55,7 +55,7 @@ class NoteActivity : AppCompatActivity() {
         textNoteTitle.setText(note.title)
         textNoteText.setText(note.text)
         mSelectedColor = note.color
-//        color_selector.selectedColor = mSelectedColor
+        colorPicker.selectedColor = mSelectedColor
 
         val coursePosition = DataManager.courses.values.indexOf(note.course)
         spinnerCourses.setSelection(coursePosition)
