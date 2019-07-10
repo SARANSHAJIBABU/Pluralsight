@@ -20,9 +20,39 @@ class ColorPicker @JvmOverloads constructor(
 ): SeekBar(context, attrs, defStyleAttr, defStyleRes) {
 
     private var colorsList = mutableListOf(Color.RED,Color.GREEN,Color.BLUE)
+    val w = 48
+    val h = 48
+    val halfWidth = if(w==0)1f else w/2f
+    val halfHeight = if(h==0)1f else h/2f
+
+    val paint = Paint()
+
+    var h2 = 0
+    var w2 = 0
+    var hh2 = 0
+    var hw2 = 0
+    var noColorDrawable:Drawable? = null
+        set(value) {
+            h2 = value?.intrinsicHeight ?: 0
+            w2 = value?.intrinsicWidth ?: 0
+            hh2 = if(h2>=0) h2/2 else 1
+            hw2 = if(w2>=0) w2/2 else 1
+            value?.setBounds(-hw2,-hh2,hw2,hh2)
+            field = value
+        }
+
+    private var listeners: ArrayList<(Int)->Unit> = ArrayList()
+
+    var selectedColor = Color.TRANSPARENT
+        set(value){
+            if(colorsList.indexOf(value)==-1){
+                progress = 0
+            }else{
+                progress = colorsList.indexOf(value)
+            }
+        }
 
     init {
-
         val typedArray = context.obtainStyledAttributes(attrs,R.styleable.ColorPicker)
 
         try{
@@ -57,6 +87,7 @@ class ColorPicker @JvmOverloads constructor(
             }
 
         })
+        noColorDrawable= context.getDrawable(R.drawable.ic_clear_black)
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -65,29 +96,19 @@ class ColorPicker @JvmOverloads constructor(
     }
 
     fun drawTicks(canvas:Canvas?){
+
+        val spacing = (width - paddingLeft - paddingRight)/(colorsList.size-1).toFloat()
+
         if(colorsList.size>0){
             canvas?.let {
-                val w = 48
-                val h = 48
-                val halfWidth = if(w==0)1f else w/2f
-                val halfHeight = if(h==0)1f else h/2f
-                val spacing = (width - paddingLeft - paddingRight)/(colorsList.size-1).toFloat()
-
                 val saveCount = canvas.save()
 
                 canvas.translate(paddingLeft.toFloat(),(height/2).toFloat() + 40f)
 
                 for(i in 0 until colorsList.size){
                     if(i==0){
-                        val d:Drawable?= context.getDrawable(R.drawable.ic_clear_black)
-                        val h2 = d?.intrinsicHeight ?: 0
-                        val w2 = d?.intrinsicWidth ?: 0
-                        val hh2 = if(h2>=0) h2/2 else 1
-                        val hw2 = if(w2>=0) w2/2 else 1
-                        d?.setBounds(-hw2,-hh2,hw2,hh2)
-                        d?.draw(canvas)
+                        noColorDrawable?.draw(canvas)
                     }else{
-                        val paint = Paint()
                         paint.color = colorsList[i]
                         canvas.drawRect(-halfWidth,-halfHeight,halfWidth,halfHeight,paint)
                     }
@@ -97,17 +118,6 @@ class ColorPicker @JvmOverloads constructor(
             }
         }
     }
-
-    private var listeners: ArrayList<(Int)->Unit> = ArrayList()
-
-    var selectedColor = Color.TRANSPARENT
-            set(value){
-                if(colorsList.indexOf(value)==-1){
-                    progress = 0
-                }else{
-                    progress = colorsList.indexOf(value)
-                }
-            }
 
     fun addListener(func:(Int)->Unit){
         listeners.add(func)
