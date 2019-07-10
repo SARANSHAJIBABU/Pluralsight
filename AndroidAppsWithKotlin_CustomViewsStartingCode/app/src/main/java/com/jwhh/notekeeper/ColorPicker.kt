@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.widget.SeekBar
 
 /**
@@ -20,8 +21,8 @@ class ColorPicker @JvmOverloads constructor(
 ): SeekBar(context, attrs, defStyleAttr, defStyleRes) {
 
     private var colorsList = mutableListOf(Color.RED,Color.GREEN,Color.BLUE)
-    val w = 48
-    val h = 48
+    val w = getPixelValueFromDp(16.0f).toInt()
+    val h = getPixelValueFromDp(16.0f).toInt()
     val halfWidth = if(w==0)1f else w/2f
     val halfHeight = if(h==0)1f else h/2f
 
@@ -70,7 +71,7 @@ class ColorPicker @JvmOverloads constructor(
         progressBackgroundTintList = ContextCompat.getColorStateList(context,android.R.color.transparent)
         progressTintList = ContextCompat.getColorStateList(context,android.R.color.transparent)
         thumb = context.getDrawable(R.drawable.ic_arrow_drop_down_black_24dp)
-        setPadding(paddingLeft,paddingTop,paddingRight,paddingBottom+40)
+        setPadding(paddingLeft,paddingTop,paddingRight,paddingBottom+getPixelValueFromDp(16.0f).toInt())
    //     setBackgroundColor(resources.getColor(android.R.color.black))
 
         setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
@@ -103,7 +104,7 @@ class ColorPicker @JvmOverloads constructor(
             canvas?.let {
                 val saveCount = canvas.save()
 
-                canvas.translate(paddingLeft.toFloat(),(height/2).toFloat() + 40f)
+                canvas.translate(paddingLeft.toFloat(),(height/2).toFloat() + getPixelValueFromDp(16.0f))
 
                 for(i in 0 until colorsList.size){
                     if(i==0){
@@ -121,5 +122,9 @@ class ColorPicker @JvmOverloads constructor(
 
     fun addListener(func:(Int)->Unit){
         listeners.add(func)
+    }
+
+    fun getPixelValueFromDp(value:Float):Float{
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,value,context.resources.displayMetrics)
     }
 }
