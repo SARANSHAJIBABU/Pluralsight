@@ -4,10 +4,13 @@
     android:layout_height="match_parent">
 
     <com.jwhh.notekeeper.ColorDialView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:paddingLeft="20dp"
         android:paddingTop="20dp"
-        android:paddingBottom="20dp" />
+        android:paddingBottom="20dp"
+        app:dialDiameter="200dp"
+        app:tickPadding="50dp"
+        app:tickRadius="15dp" />
 
 </FrameLayout>

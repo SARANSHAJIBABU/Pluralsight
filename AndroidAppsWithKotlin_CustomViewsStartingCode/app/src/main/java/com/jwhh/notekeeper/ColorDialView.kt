@@ -1,5 +1,6 @@
 package com.jwhh.notekeeper
 
+import android.arch.lifecycle.Transformations.map
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -17,7 +18,7 @@ class ColorDialView @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0)
     : View(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val colors:ArrayList<Int> = arrayListOf(Color.TRANSPARENT, Color.RED, Color.YELLOW, Color.BLUE,
+    private var colors:ArrayList<Int> = arrayListOf( Color.RED, Color.YELLOW, Color.BLUE,
             Color.GREEN, Color.DKGRAY, Color.CYAN,Color.MAGENTA, Color.BLUE)
 
     private var dialDrawable: Drawable? = null
@@ -45,6 +46,26 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 
     init {
+        val typedArray = context.obtainStyledAttributes(attrs,R.styleable.ColorDialView)
+        try {
+            val customColors = typedArray.getTextArray(R.styleable.ColorPicker_colors)
+                    ?.map {
+                        Color.parseColor(it.toString())
+                    } as ArrayList<Int>?
+
+            customColors?.let {
+                colors = customColors
+            }
+
+            dialDiameter = typedArray.getDimension(R.styleable.ColorDialView_dialDiameter,
+                    toDP(100).toFloat()).toInt()
+
+            tickSize = typedArray.getDimension(R.styleable.ColorDialView_tickRadius,toDP(10).toFloat())
+            extraPadding = typedArray.getDimension(R.styleable.ColorDialView_tickPadding,toDP(30).toFloat()).toInt()
+
+        }finally {
+            typedArray.recycle()
+        }
         dialDrawable = context.getDrawable(R.drawable.ic_dial).also {
             it?.bounds = getCenteredBound(dialDiameter)
             it?.setTint(Color.DKGRAY)
@@ -54,7 +75,15 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             it?.bounds = getCenteredBound(tickSize.toInt(),2f)
         }
 
+        colors.add(0,Color.TRANSPARENT)
+
         refreshValues()
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val width = resolveSizeAndState(this.horizontalSize.toInt(),widthMeasureSpec,0)
+        val height = resolveSizeAndState(this.verticalSize.toInt(),heightMeasureSpec,0)
+        setMeasuredDimension(width,height)
     }
 
 
