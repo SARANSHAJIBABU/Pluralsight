@@ -51,6 +51,12 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         it.isAntiAlias = true
     }
 
+    private var dragStartX = 0f
+    private var dragStartY = 0f
+    private var isDragging = false
+    private var snapAngle = 0f
+    private var selectedPosition = 0
+
     init {
         val typedArray = context.obtainStyledAttributes(attrs,R.styleable.ColorDialView)
         try {
@@ -236,5 +242,29 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private fun getCenteredBound(size:Int, scalar:Float=1f):Rect{
         val half = ((if(size>0)size/2 else 1)*scalar).toInt()
         return Rect(-half,-half,half,half)
+    }
+
+    private var listeners:ArrayList<(Int)->Unit> = arrayListOf()
+
+    var selectedColor: Int = Color.TRANSPARENT
+        set(value) {
+            val index = colors.indexOf(value)
+            selectedPosition = if(index ==-1)0 else index
+            snapAngle = (selectedPosition*angleBetweenColors)
+            invalidate()
+        }
+
+    fun addListener(func:(Int)->Unit){
+        listeners.add(func)
+    }
+
+    private fun broadcastColorChange(){
+        listeners.forEach{
+            if(selectedPosition>colors.size-1){
+                it(colors[0])
+            }else{
+                it(colors[selectedPosition])
+            }
+        }
     }
 }
