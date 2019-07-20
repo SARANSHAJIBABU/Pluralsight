@@ -1,6 +1,5 @@
 package com.jwhh.notekeeper
 
-import android.arch.lifecycle.Transformations.map
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -9,7 +8,10 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.MotionEvent
+import android.view.MotionEvent.*
 import android.view.View
+import kotlin.math.roundToInt
 
 /**
  * TODO: document your custom view class.
@@ -117,11 +119,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
 
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-        canvas.translate(centerHorizontal,centerVertical)
-        dialDrawable?.draw(canvas)
-        canvas.translate(-centerHorizontal,-centerVertical)
+        val saveCount = canvas.save()
         colors.forEachIndexed { index, color ->
             if(index==0){
                 canvas.translate(centerHorizontal,tickPositionVertical)
@@ -134,6 +132,78 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
             canvas.rotate(angleBetweenColors,centerHorizontal,centerVertical)
         }
+        canvas.restoreToCount(saveCount)
+        canvas.rotate(snapAngle,centerHorizontal,centerVertical)
+        canvas.translate(centerHorizontal,centerVertical)
+        dialDrawable?.draw(canvas)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        dragStartX = event.x
+        dragStartY = event.y
+
+        if(event.action == ACTION_DOWN || event.action == ACTION_MOVE){
+            isDragging = true
+
+            if(hasNewSnapAngle(dragStartX,dragStartY)){
+                broadcastColorChange()
+                invalidate()
+            }
+        }else if (event.action == ACTION_UP){
+            isDragging = false
+        }
+        return true
+    }
+    //convert x,y into cartesian coordinates
+    //convert into angles
+    //get nearest angle
+    //find color
+    //redraw
+
+    private fun convertToCartesianX(x:Float):Float{
+        return x-horizontalSize/2
+    }
+
+    private fun convertToCartesianY(y:Float):Float{
+        return (verticalSize-y)-verticalSize/2
+    }
+
+    private fun convertCartesianToPolar(x:Float,y:Float):Float{
+        val angle =  Math.toDegrees((Math.atan2(y.toDouble(),
+                x.toDouble()))).toFloat()
+        return when (angle) {
+            in 0 .. 180 -> angle
+            in -180 .. 0 -> angle + 360
+            else -> angle
+        }
+    }
+
+    private fun hasNewSnapAngle(x:Float, y:Float):Boolean{
+        val cartesianX = convertToCartesianX(x)
+        val cartesianY = convertToCartesianY(y)
+
+        val dragAngle = convertCartesianToPolar(cartesianX,cartesianY)
+
+        val nearestAngle = getNearestAngle(dragAngle)
+        val nearestPosition = getPositionFromSnappedAngle(nearestAngle)
+        val newAngle = nearestPosition * angleBetweenColors
+        var shouldUpdate = false
+        if(newAngle!=snapAngle){
+            shouldUpdate = true
+            selectedPosition = nearestPosition
+        }
+        snapAngle = newAngle
+        return shouldUpdate
+    }
+
+    private fun getNearestAngle(dragAngle:Float):Float{
+        var adjustedAngle = (360 - dragAngle) + 90
+        while (adjustedAngle > 360) adjustedAngle -= 360
+        return adjustedAngle
+    }
+
+    private fun getPositionFromSnappedAngle(nearestAngle:Float):Int{
+        return (nearestAngle/angleBetweenColors).roundToInt()
     }
 
     private fun refreshValues(withScale:Boolean){
