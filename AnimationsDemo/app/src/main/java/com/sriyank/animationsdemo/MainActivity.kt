@@ -36,4 +36,12 @@ class MainActivity : AppCompatActivity() {
             start()
         }
     }
+
+    fun onClickTranslate(view: View){
+        val translateAnimation = AnimatorInflater.loadAnimator(this,R.animator.translate)
+        translateAnimation.apply {
+            setTarget(wheel)
+            start()
+        }
+    }
 }
