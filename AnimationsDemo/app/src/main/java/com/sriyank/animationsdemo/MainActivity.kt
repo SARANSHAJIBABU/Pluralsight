@@ -28,4 +28,12 @@ class MainActivity : AppCompatActivity() {
             start()
         }
     }
+
+    fun onClickScale(view: View){
+        val scaleAnimation = AnimatorInflater.loadAnimator(this,R.animator.scale)
+        scaleAnimation?.apply {
+            setTarget(wheel)
+            start()
+        }
+    }
 }
