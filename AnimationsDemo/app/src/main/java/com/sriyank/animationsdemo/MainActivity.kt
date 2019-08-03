@@ -2,6 +2,8 @@ package com.sriyank.animationsdemo
 
 import android.animation.Animator
 import android.animation.AnimatorInflater
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -9,10 +11,16 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    var alphaAnimation:Animator? = null
+/*    var alphaAnimation:Animator? = null
     var rotateAnimation:Animator? = null
     var scaleAnimation:Animator? = null
-    var translateAnimation:Animator? = null
+    var translateAnimation:Animator? = null*/
+
+
+    var alphaAnimation:ObjectAnimator? = null
+    var rotateAnimation:ObjectAnimator? = null
+    var scaleAnimation:ObjectAnimator? = null
+    var translateAnimation:ObjectAnimator? = null
     val mListener = AnimatorListener()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,37 +29,71 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onClickAlpha(view: View){
-        alphaAnimation = AnimatorInflater.loadAnimator(this,R.animator.alpha)
+/*        alphaAnimation = AnimatorInflater.loadAnimator(this,R.animator.alpha)
         alphaAnimation?.apply {
             setTarget(wheel)
             addListener(mListener)
             start()
 
+        }*/
+
+        alphaAnimation = ObjectAnimator.ofFloat(wheel,"alpha",1.0f,0.0f)
+        alphaAnimation?.apply {
+            duration = 1000
+            repeatCount = 1
+            repeatMode = ValueAnimator.REVERSE
+            addListener(mListener)
+            start()
         }
     }
 
     fun onClickRotate(view: View){
-        rotateAnimation = AnimatorInflater.loadAnimator(this,R.animator.rotate)
+/*        rotateAnimation = AnimatorInflater.loadAnimator(this,R.animator.rotate)
         rotateAnimation?.apply {
             setTarget(wheel)
+            addListener(mListener)
+            start()
+        }*/
+        rotateAnimation = ObjectAnimator.ofFloat(wheel,"rotation",0.0f,-180.0f)
+        rotateAnimation?.apply {
+            duration = 1000
+            repeatCount = 1
+            repeatMode = ValueAnimator.REVERSE
             addListener(mListener)
             start()
         }
     }
 
     fun onClickScale(view: View){
-        scaleAnimation = AnimatorInflater.loadAnimator(this,R.animator.scale)
+ /*       scaleAnimation = AnimatorInflater.loadAnimator(this,R.animator.scale)
         scaleAnimation?.apply {
             setTarget(wheel)
+            addListener(mListener)
+            start()
+        }*/
+        scaleAnimation = ObjectAnimator.ofFloat(wheel,"scaleX",1.0f,1.5f)
+        scaleAnimation?.apply {
+            duration = 1000
+            repeatMode = ValueAnimator.REVERSE
+            repeatCount = 1
             addListener(mListener)
             start()
         }
     }
 
     fun onClickTranslate(view: View){
-        translateAnimation = AnimatorInflater.loadAnimator(this,R.animator.translate)
+/*        translateAnimation = AnimatorInflater.loadAnimator(this,R.animator.translate)
         translateAnimation?.apply {
             setTarget(wheel)
+            addListener(mListener)
+            start()
+        }*/
+
+        translateAnimation = ObjectAnimator.ofFloat(wheel,"translationX",0.0f,200.0f)
+        translateAnimation?.apply {
+            duration = 1000
+            repeatCount = 1
+            repeatMode = ValueAnimator.REVERSE
             addListener(mListener)
             start()
         }
