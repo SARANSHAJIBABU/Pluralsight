@@ -1,12 +1,12 @@
 package com.sriyank.animationsdemo
 
 import android.animation.*
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewPropertyAnimator
 import android.view.animation.BounceInterpolator
-import android.view.animation.OvershootInterpolator
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -21,11 +21,25 @@ class MainActivity : AppCompatActivity() {
     var rotateAnimation: ObjectAnimator? = null
     var scaleAnimation: ObjectAnimator? = null
     var translateAnimation: ObjectAnimator? = null
-    val mListener = Animator.AnimatorListener()
+    val mListener = AnimatorListener()
+    var checked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        avdImgView.setOnClickListener {
+            if(!checked){
+                avdImgView.setImageResource(R.drawable.avd_check_to_cross)
+                val avDrawable = avdImgView.drawable as AnimatedVectorDrawable
+                avDrawable.start()
+            }else{
+                avdImgView.setImageResource(R.drawable.avd_cross_to_check)
+                val avDrawable = avdImgView.drawable as AnimatedVectorDrawable
+                avDrawable.start()
+            }
+            checked = !checked
+        }
     }
 
     fun onClickAlpha(view: View) {
