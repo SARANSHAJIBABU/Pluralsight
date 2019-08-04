@@ -1,8 +1,10 @@
 package com.sriyank.animationsdemo
 
 import android.animation.*
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewPropertyAnimator
@@ -31,11 +33,11 @@ class MainActivity : AppCompatActivity() {
         avdImgView.setOnClickListener {
             if(!checked){
                 avdImgView.setImageResource(R.drawable.avd_check_to_cross)
-                val avDrawable = avdImgView.drawable as AnimatedVectorDrawable
+                val avDrawable = avdImgView.drawable as Animatable
                 avDrawable.start()
             }else{
                 avdImgView.setImageResource(R.drawable.avd_cross_to_check)
-                val avDrawable = avdImgView.drawable as AnimatedVectorDrawable
+                val avDrawable = avdImgView.drawable as Animatable
                 avDrawable.start()
             }
             checked = !checked
