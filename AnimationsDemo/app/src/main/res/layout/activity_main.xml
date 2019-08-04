@@ -46,4 +46,21 @@
             app:layout_constraintEnd_toEndOf="parent" android:id="@+id/wheel" android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.26"/>
+    <Button
+            android:text="Set XML"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/setxml" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/setcode"
+            android:layout_marginBottom="16dp" app:layout_constraintBottom_toTopOf="@+id/rotate"
+            android:onClick="onClickSetXml"/>
+    <Button
+            android:text="Set Code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/setcode"
+            app:layout_constraintStart_toEndOf="@+id/setxml" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/setxml" app:layout_constraintBottom_toBottomOf="@+id/setxml"
+            android:onClick="onClickSetCode"/>
 </android.support.constraint.ConstraintLayout>

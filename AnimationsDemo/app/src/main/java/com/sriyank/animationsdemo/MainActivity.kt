@@ -99,6 +99,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun onClickSetXml(view: View){
+        val animator = AnimatorInflater.loadAnimator(this,R.animator.set)
+        animator?.apply {
+            setTarget(wheel)
+            start()
+        }
+    }
+
     inner class AnimatorListener:Animator.AnimatorListener{
         override fun onAnimationRepeat(animation: Animator?) {
             when(animation){
