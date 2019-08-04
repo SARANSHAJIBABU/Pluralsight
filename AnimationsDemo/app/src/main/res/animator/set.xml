@@ -15,13 +15,15 @@
                 android:duration="1000"
                 android:valueFrom="1.0"
                 android:valueTo="1.5"
-                android:valueType="floatType"/>
+                android:valueType="floatType"
+                android:interpolator="@android:anim/bounce_interpolator"/>
         <objectAnimator
                 android:propertyName="scaleY"
                 android:duration="1000"
                 android:valueFrom="1.0"
                 android:valueTo="1.5"
-                android:valueType="floatType"/>
+                android:valueType="floatType"
+                android:interpolator="@android:anim/bounce_interpolator"/>
     </set>
 
 </set>
