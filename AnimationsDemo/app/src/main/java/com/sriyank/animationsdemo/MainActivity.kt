@@ -1,9 +1,6 @@
 package com.sriyank.animationsdemo
 
-import android.animation.Animator
-import android.animation.AnimatorInflater
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
+import android.animation.*
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -106,6 +103,21 @@ class MainActivity : AppCompatActivity() {
             start()
         }
     }
+
+    fun onClickSetCode(view: View){
+        val rootSet = AnimatorSet()
+        val rotationY = ObjectAnimator.ofFloat(wheel,"rotationY",0.0f,360.0f);
+        rotationY.duration = 1000
+        val childSet = AnimatorSet()
+        val scaleX = ObjectAnimator.ofFloat(wheel,"scaleX",1.0f,1.5f)
+        scaleX.duration = 1000
+        val scaleY = ObjectAnimator.ofFloat(wheel,"scaleY",1.0f,1.5f)
+        scaleY.duration = 1000
+        childSet.playTogether(scaleX,scaleY)
+        rootSet.playSequentially(rotationY,childSet)
+        rootSet.start()
+    }
+
 
     inner class AnimatorListener:Animator.AnimatorListener{
         override fun onAnimationRepeat(animation: Animator?) {

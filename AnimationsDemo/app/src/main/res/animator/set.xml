@@ -8,7 +8,8 @@
             android:valueType="floatType"
             android:duration="1000"/>
 
-    <set>
+    <set
+            android:ordering="together">
         <objectAnimator
                 android:propertyName="scaleX"
                 android:duration="1000"
