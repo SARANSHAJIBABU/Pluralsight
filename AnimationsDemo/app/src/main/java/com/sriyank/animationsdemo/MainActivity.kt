@@ -125,6 +125,18 @@ class MainActivity : AppCompatActivity() {
         rootSet.start()
     }
 
+    fun onClickViewPropertyAnimation(view:View){
+        val animator = wheel.animate()
+        animator.apply {
+            duration = 1000
+            scaleX(1.5f)
+            scaleY(1.5f)
+            rotationX(360.0f)
+            interpolator = BounceInterpolator()
+            start()
+        }
+    }
+
 
     inner class AnimatorListener:Animator.AnimatorListener{
         override fun onAnimationRepeat(animation: Animator?) {

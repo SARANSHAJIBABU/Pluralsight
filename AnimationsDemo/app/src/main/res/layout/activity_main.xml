@@ -63,4 +63,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/setxml" app:layout_constraintBottom_toBottomOf="@+id/setxml"
             android:onClick="onClickSetCode"/>
+    <Button
+            android:text="ViewPropertyAnimation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/button" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/setcode" android:onClick="onClickViewPropertyAnimation"/>
 </android.support.constraint.ConstraintLayout>
