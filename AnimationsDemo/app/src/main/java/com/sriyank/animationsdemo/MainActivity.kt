@@ -113,8 +113,11 @@ class MainActivity : AppCompatActivity() {
         scaleX.duration = 1000
         val scaleY = ObjectAnimator.ofFloat(wheel,"scaleY",1.0f,1.5f)
         scaleY.duration = 1000
-        childSet.playTogether(scaleX,scaleY)
-        rootSet.playSequentially(rotationY,childSet)
+/*        childSet.playTogether(scaleX,scaleY)
+        rootSet.playSequentially(rotationY,childSet)*/
+
+        childSet.play(scaleX).with(scaleY)
+        rootSet.play(childSet).after(rotationY)
         rootSet.start()
     }
 
