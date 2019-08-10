@@ -2,70 +2,40 @@ package com.sriyank.animationsdemo
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.transition.*
+import android.transition.Fade
+import android.transition.Slide
+import android.transition.TransitionManager
+import android.view.Gravity
 import android.view.View
-import android.view.animation.LinearInterpolator
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.scene2.*
 
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var scene1: Scene
-    private lateinit var scene2: Scene
-    private lateinit var currentScene: Scene
-    private lateinit var transition: Transition
-    private lateinit var transitionSet: TransitionSet
+    private var visibility = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Step 1: Create a Scene object for both the starting and ending layout
-        scene1 = Scene.getSceneForLayout(sceneRoot, R.layout.scene1, this)
-        scene2 = Scene.getSceneForLayout(sceneRoot,R.layout.scene2,this)
-
-
-        // Step 2: Create a Transition object to define what type of animation you want
-        createTransitionSet()
-
-        scene1.enter()
-        currentScene = scene1
     }
 
-    fun onClick(view: View) {
+    fun fadeAnimation(view: View) {
+        TransitionManager.beginDelayedTransition(sceneRoot,Fade())
+        //1. framework calls transition’s captureStartValues() for each view in the scene and the transition records each view’s visibility.
 
-        // Step 3: Call TransitionManager.go() to run animation
-        currentScene = if(currentScene===scene1){
-            TransitionManager.go(scene2,transitionSet)
-            scene2
-        }else{
-            TransitionManager.go(scene1,transitionSet)
-            scene1
-        }
-
+        txvDescription.visibility = if(visibility) View.INVISIBLE else View.VISIBLE
+        //2. framework calls transition’s captureEndValues() method for each view in the scene and the transition records each view’s (recently updated) visibility.
+        //3. framework calls transition’s createAnimator() method. The transition analyzes the start and end values of each view and notices a difference:
+        //4. Fade transition uses this information to create and return an AnimatorSet that will fade each view’s alpha property to 0f.
+        //5. framework runs the returned Animator,
+        visibility = !visibility
     }
 
-    fun createTransitionSet(){
-        val changeBounds = ChangeBounds()
-        changeBounds.duration = 500
-        changeBounds.interpolator = LinearInterpolator()
-
-        val fadein = Fade(Fade.IN)
-        fadein.duration = 250
-        fadein.startDelay = 400
-        fadein.interpolator = LinearInterpolator()
-        fadein.addTarget(R.id.txvTitle)
-
-        val fadeout = Fade(Fade.OUT)
-        fadeout.duration = 50
-        fadeout.interpolator = LinearInterpolator()
-        fadeout.addTarget(R.id.txvTitle)
-
-        transitionSet = TransitionSet()
-        transitionSet.ordering = TransitionSet.ORDERING_TOGETHER
-        transitionSet.addTransition(changeBounds)
-        transitionSet.addTransition(fadein)
-        transitionSet.addTransition(fadeout)
+    fun slideEffect(view: View) {
+        //
+        TransitionManager.beginDelayedTransition(sceneRoot,Slide(Gravity.END))
+        txvDescription.visibility = if(visibility) View.INVISIBLE else View.VISIBLE
+        visibility = !visibility
     }
 }
