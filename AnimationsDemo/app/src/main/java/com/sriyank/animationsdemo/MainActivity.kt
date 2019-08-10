@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
 
         // Step 2: Create a Transition object to define what type of animation you want
-
+        transition = TransitionInflater.from(this).inflateTransition(R.transition.transition_1)
 
         scene1.enter()
         currentScene = scene1
@@ -35,10 +35,10 @@ class MainActivity : AppCompatActivity() {
 
         // Step 3: Call TransitionManager.go() to run animation
         currentScene = if(currentScene===scene1){
-            TransitionManager.go(scene2)
+            TransitionManager.go(scene2,transition)
             scene2
         }else{
-            TransitionManager.go(scene1)
+            TransitionManager.go(scene1,transition)
             scene1
         }
 
